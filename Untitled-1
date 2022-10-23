@@ -1,0 +1,66 @@
+SELECT E.markets_id,E.admins_id,A.products_id,A.product_types_id,A.category_id,
+ C.categories_name,A.sub_categories_id,
+D.sub_categories_name,A.brands_id,B.brands_name , A.country_id, A.name, A.details, A.product_code,
+A.image_one, A.image_two, A.image_three, A.image_four, A.price, A.discount_price, A.discount, 
+A.quantity, A.sort_order, A.products_status, (E.quantity * A.discount_price) as TotalPriceSingleProduct 
+FROM products A, brands B, categories C, sub_categories D, markets E, admins F
+                                        WHERE A.brands_id = B.brands_id
+                                        AND C.categories_id = A.category_id
+                                        AND D.sub_categories_id = A.sub_categories_id
+                                        AND E.admins_id = F.admins_id
+                                        AND E.products_id = A.products_id
+                                        AND E.admins_id='27'
+                                        GROUP BY E.markets_id
+                                        
+                                        
+                                        
+SELECT E.markets_id,E.admins_id,A.products_id,A.product_types_id,A.category_id,
+                        C.categories_name,A.sub_categories_id,
+                        D.sub_categories_name,A.brands_id,B.brands_name , A.country_id, A.name, A.details, A.product_code,
+                        A.image_one, A.image_two, A.image_three, A.image_four, A.price, A.discount_price, A.discount, 
+                        A.quantity, A.sort_order, A.products_status, (E.quantity * A.discount_price) as TotalPriceSingleProduct 
+                        FROM products A, brands B, categories C, sub_categories D, markets E, admins F
+                                                            WHERE A.brands_id = B.brands_id
+                                                            AND C.categories_id = A.category_id
+                                                            AND D.sub_categories_id = A.sub_categories_id
+                                                            AND E.admins_id = F.admins_id
+                                                            AND E.products_id = A.products_id
+                                                            AND E.admins_id='27'
+                                                            GROUP BY E.markets_id
+                                                            union
+                        SELECT null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null
+                        ,null,null,'total:',sum((E.quantity * A.discount_price)) as GrandTotalPriceSingleProduct 
+                        FROM products A, brands B, categories C, sub_categories D, markets E, admins F
+                                                            WHERE A.brands_id = B.brands_id
+                                                            AND C.categories_id = A.category_id
+                                                            AND D.sub_categories_id = A.sub_categories_id
+                                                            AND E.admins_id = F.admins_id
+                                                            AND E.products_id = A.products_id
+                                                            AND E.admins_id='27'
+                                                            
+                                                            
+                                                                
+<div class="slider-items-slick row" data-slick='{"slidesToShow": 4, "slidesToScroll": 2}'>
+	<?php
+		$product = DB::select("SELECT * FROM products WHERE category_id = '$productCateGory'  ORDER BY products_id ASC LIMIT 12");
+	?>
+	@foreach($product as $product)
+
+	<div class="item-slide p-2">
+		<figure class="card card-product-grid mb-0">
+			<div class="img-wrap"> 
+				<a href="{{URL::to('/show-product').'/'.$product->name}}"  class="img-wrap">
+				<span class="badge badge-danger"> NEW </span>
+				<img src="{{asset($product->image_one)}}">
+				</a>
+			</div>
+			<figcaption class="info-wrap text-center">
+				<h6 class="title text-truncate"><a href="{{URL::to('/show-product').'/'.$product->name}}">{{$product->name}}</a></h6>
+				<div class="price mt-1">{{$product->discount_price}} ৳</div>
+			</figcaption>
+		</figure> <!-- card // -->
+	</div>
+	
+	@endforeach
+</div>
+    
